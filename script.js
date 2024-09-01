@@ -8,6 +8,9 @@ var lastvel = vec2(0, 0)
 var pmass = 100
 var planets = []
 
+const canvas = document.getElementById("minimap")
+const ctx = canvas.getContext("2d")
+
 function calcforce(m1, m2, r) {return gc * (m1 * m2) / (r * r)}
 function calcacc(f, m) {return f / m}
 function calcvel(u, a, t) {return u + a * t}
@@ -22,6 +25,24 @@ function resetstarposvel() {
 function clearplanets() {
     planets.forEach(planet => destroy(planet))
     planets = []
+}
+
+function drawminimap(x, y, type) {
+    x = (x / 10000) * 300 + 150
+    y = (y / 10000) * 300 + 150
+    
+    ctx.beginPath()
+    
+    if (type == "star") {
+        ctx.arc(x, y, 3, 0, 2 * Math.PI)
+        ctx.fillStyle = "#fff"
+    }
+    if (type == "planet") {
+        ctx.arc(x, y, 2, 0, 2 * Math.PI)
+        ctx.fillStyle = "#0ff"
+    }
+    
+    ctx.fill()
 }
 
 const star = add([
@@ -80,6 +101,9 @@ onUpdate(() => {
     else {star.mass = 2000}
     if (parseInt(document.getElementById("planetmass").value)) {planets.forEach(planet => {planet.mass = parseInt(document.getElementById("planetmass").value)})}
     else {planets.forEach(planet => {planet.mass = 100})}
+    
+    ctx.clearRect(0, 0, 300, 300)
+    drawminimap(star.pos.x, star.pos.y, "star")
 
     if (planets.length == 0) {
         star.pos.x += lastvel.x * dt
@@ -87,6 +111,7 @@ onUpdate(() => {
     }
 
     planets.forEach(planet => {
+        drawminimap(planet.pos.x, planet.pos.y, "planet")
         const dx = planet.pos.x - star.pos.x
         const dy = planet.pos.y - star.pos.y
         const dist = Math.sqrt(dx * dx + dy * dy)

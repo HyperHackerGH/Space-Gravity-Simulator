@@ -2,10 +2,6 @@ body {
     overflow: hidden;
 }
 
-canvas {
-    z-index: 0
-}
-
 #container {
     z-index: 1;
     color: #fff;
@@ -29,4 +25,13 @@ button, input {
 input {
     padding: 5px;
     cursor: text
+}
+
+#minimap {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: #000;
+    border-radius: 5px;
+    border: #fff 1px solid;
 }
