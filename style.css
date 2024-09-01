@@ -1,0 +1,32 @@
+body {
+    overflow: hidden;
+}
+
+canvas {
+    z-index: 0
+}
+
+#container {
+    z-index: 1;
+    color: #fff;
+    position: fixed;
+    top: 25px;
+    left: 25px;
+}
+
+button, input {
+    background: #fff;
+    color: #000;
+    border: none;
+    outline: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 10px 0
+}
+
+input {
+    padding: 5px;
+    cursor: text
+}
