@@ -4,6 +4,7 @@ kaboom({
 
 const gc = 0.667430
 const dt = 1
+var lastvel = vec2(0, 0)
 var pmass = 100
 var planets = []
 
@@ -15,13 +16,12 @@ function calcpos(u, a, t) {return u * t + 0.5 * a * t * t}
 function resetstarposvel() {
     star.pos = vec2(width() / 2 - 7.5, height() / 2 - 7.5)
     star.vel = vec2(0, 0)
+    lastvel = vec2(0, 0)
 }
 
 function clearplanets() {
-    planets.forEach(planet => {
-        destroy(planet)
-        planets.splice(planets.indexOf(planet), 1)
-    })
+    planets.forEach(planet => destroy(planet))
+    planets = []
 }
 
 const star = add([
@@ -32,10 +32,7 @@ const star = add([
     "star",
     {
         mass: 2000,
-        vel: {
-            x: 0,
-            y: 0
-        }
+        vel: vec2(0, 0)
     }
 ])
 
@@ -61,10 +58,7 @@ function launchplanet(start, end) {
             color(0, 255, 255),
             {
                 mass: pmass,
-                vel: {
-                    x: velx,
-                    y: vely
-                }
+                vel: vec2(velx, vely)
             }
         ])
     )
@@ -86,13 +80,22 @@ onUpdate(() => {
     else {star.mass = 2000}
     if (parseInt(document.getElementById("planetmass").value)) {planets.forEach(planet => {planet.mass = parseInt(document.getElementById("planetmass").value)})}
     else {planets.forEach(planet => {planet.mass = 100})}
-    
+
+    if (planets.length == 0) {
+        star.pos.x += lastvel.x * dt
+        star.pos.y += lastvel.y * dt
+    }
+
     planets.forEach(planet => {
         const dx = planet.pos.x - star.pos.x
         const dy = planet.pos.y - star.pos.y
         const dist = Math.sqrt(dx * dx + dy * dy)
 
-        if (dist <= 15) destroy(planet)
+        if (dist <= 20) {
+            planets.splice(planets.indexOf(planet), 1)
+            destroy(planet)
+            return
+        }
 
         const force = calcforce(star.mass, planet.mass, dist)
 
@@ -113,5 +116,7 @@ onUpdate(() => {
         star.pos.y += calcpos(star.vel.y, acc1y, dt)
         planet.pos.x += calcpos(planet.vel.x, acc2x, dt)
         planet.pos.y += calcpos(planet.vel.y, acc2y, dt)
+
+        lastvel = star.vel.clone()
     })
 })
