@@ -28,8 +28,8 @@ function clearplanets() {
 }
 
 function drawminimap(x, y, type) {
-    x = ((x - (width() / 2 - 7.5)) / 10000) * 300 + 150
-    y = ((y - (height() / 2 - 7.5)) / 10000) * 300 + 150
+    x = ((x - (width() / 2 - 7.5)) / 50000) * 300 + 150
+    y = ((y - (height() / 2 - 7.5)) / 50000) * 300 + 150
     
     ctx.beginPath()
     
